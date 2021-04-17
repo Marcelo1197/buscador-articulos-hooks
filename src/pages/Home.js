@@ -1,6 +1,9 @@
 import React, { useState, useEffect } from "react";
 import "../assets/styles/Home.css";
+import Article from "../components/Article";
+/* 
 
+*/
 export default function Home() {
   const [data, setData] = useState({ hits: [] });
   const [query, setQuery] = useState("react");
@@ -20,6 +23,7 @@ export default function Home() {
         }
         const topics = await res.json();
         setData({ hits: topics.hits });
+        setError({err: false})
         setIsLoading(false);
       } catch (err) {
         setIsLoading(false);
@@ -65,26 +69,15 @@ export default function Home() {
       </section>
       <hr />
       <section className="articleList">
-        {error.err && <div className="errorMessage">Ups hubo un error...</div>}
-        {isLoading && <div>Loading...</div>}
-        {!error.err &&
-          data.hits.map((article) => {
-            return (
-              <article key={article.objectID}>
-                <div>
-                  <h4>Titulo: {article.title}</h4>
-                  <p>
-                    <strong>Autor: </strong>
-                    {article.author}
-                  </p>
-
-                  <a href={article.url} target="_blank">
-                    ¡Ir al artículo!
-                  </a>
-                </div>
-              </article>
+        {isLoading 
+          ? <div>Loading...</div>
+          : error.err
+            ? <div className="errorMessage">Ups hubo un error...</div>
+            : data.hits.map((article) => {
+              return (
+              <Article key={article.objectID} article={article}/>
             );
-          })}
+        })}
       </section>
     </>
   );
